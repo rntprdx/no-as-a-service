@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>No-as-a-Service 💔</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/hotheadhacker/no-as-a-service/main/assets/imgs/naas-with-no-logo-bunny.png">
+  <style>
+    /* --- Base Style --- */
+    body {
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+      color: #222;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* --- Floating Background Shapes --- */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.4;
+      filter: blur(80px);
+      animation: float 8s infinite ease-in-out alternate;
+    }
+    .blob1 { background: #ff9a9e; width: 250px; height: 250px; top: 10%; left: 15%; }
+    .blob2 { background: #fad0c4; width: 300px; height: 300px; bottom: 10%; right: 20%; }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-40px); }
+    }
+
+    /* --- Main Card --- */
+    .container {
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 3rem 2rem;
+      width: 90%;
+      max-width: 500px;
+      z-index: 1;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.25rem;
+      color: #1f2937;
+    }
+    p.subtitle {
+      font-size: 1.1rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+
+    /* --- Button --- */
+    button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.9rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    button:hover {
+      transform: scale(1.07);
+      box-shadow: 0 8px 20px rgba(118,75,162,0.3);
+    }
+
+    #reason {
+      margin-top: 2rem;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #111827;
+      min-height: 1.5em;
+      transition: opacity 0.3s ease;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: #4b5563;
+    }
+    footer a {
+      color: #6366f1;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* --- Cute emoji fade in --- */
+    .emoji {
+      font-size: 2rem;
+      margin-top: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .emoji.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+
+  <div class="container">
+    <h1>😅 Ang aking kasagutan ay...</h1>
+    <p class="subtitle">“Hindi po, ate!” (in 999 different ways 😂)</p>
+    <button id="getNoBtn">🎲 Translate My "No"</button>
+    <div id="reason"></div>
+    <div id="emoji" class="emoji">🤔</div>
+  </div>
+
+  <footer>
+    Built with stubborn love by <a href="" target="_blank">yours truly 💖</a>
+  </footer>
+
+  <script>
+    const button = document.getElementById('getNoBtn');
+    const reasonDiv = document.getElementById('reason');
+    const emoji = document.getElementById('emoji');
+
+    async function getNo() {
+      reasonDiv.textContent = "Thinking of a reason...";
+      reasonDiv.style.opacity = "0.5";
+      emoji.textContent = "🧠";
+      emoji.classList.add("show");
+
+      try {
+        const response = await fetch('/no');
+        const data = await response.json();
+        reasonDiv.textContent = data.reason;
+        reasonDiv.style.opacity = "1";
+
+        // random fun emojis
+        const emojis = ["😂", "🙈", "💔", "😬", "🥹", "😅", "🚫", "🤷‍♀️"];
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      } catch (err) {
+        reasonDiv.textContent = "❌ Failed to fetch a 'no'. Is the server running?";
+        emoji.textContent = "😢";
+      }
+    }
+
+    button.addEventListener('click', getNo);
+  </script>
+</body>
+</html>
